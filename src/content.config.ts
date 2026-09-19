@@ -9,8 +9,8 @@ const workSchema = z.object({
 	end: z.coerce.date().optional(),
 	description: z.string(),
 	skills: z.array(z.string()),
-	github: z.string().url().optional(),
-	website: z.string().url().optional(),
+	github: z.url().optional(),
+	website: z.url().optional(),
 	featured: z.boolean().default(false),
 	thumbnail: z.string().optional(),
 });
