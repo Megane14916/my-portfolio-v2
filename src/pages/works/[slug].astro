@@ -1,7 +1,7 @@
 ---
 import { getCollection, render, type CollectionEntry } from "astro:content";
 
-import { skillsById, type SkillId } from "../../data/skills";
+import { formatPeriod, getSkillName } from "../../data/content";
 import Layout from "../../layouts/Layout.astro";
 
 export async function getStaticPaths() {
@@ -19,7 +19,6 @@ interface Props {
 
 const { entry } = Astro.props;
 const { Content } = await render(entry);
-const getSkillName = (id: string) => skillsById[id as SkillId]?.name ?? id;
 ---
 
 <Layout title={`${entry.data.title} | My Portfolio`} description={entry.data.description}>
@@ -36,11 +35,24 @@ const getSkillName = (id: string) => skillsById[id as SkillId]?.name ?? id;
 			<p class="text-sm font-medium uppercase tracking-widest text-slate-500">Work</p>
 			<h1 class="mt-4 text-4xl font-bold tracking-tight text-slate-900">{entry.data.title}</h1>
 			<p class="mt-4 text-lg leading-8 text-slate-600">{entry.data.description}</p>
+			<p class="mt-4 text-sm text-slate-500">{formatPeriod(entry.data.start, entry.data.end)}</p>
 			<ul class="mt-6 flex flex-wrap gap-2" aria-label="使用技術">
 				{entry.data.skills.map((skill) => (
 					<li class="rounded bg-slate-100 px-2 py-1 text-sm text-slate-700">{getSkillName(skill)}</li>
 				))}
 			</ul>
+			<div class="mt-6 flex flex-wrap gap-4 text-sm">
+				{entry.data.github && (
+					<a class="font-medium text-slate-900 underline underline-offset-4" href={entry.data.github} target="_blank" rel="noreferrer">
+						GitHub
+					</a>
+				)}
+				{entry.data.website && (
+					<a class="font-medium text-slate-900 underline underline-offset-4" href={entry.data.website} target="_blank" rel="noreferrer">
+						公開サイト
+					</a>
+				)}
+			</div>
 		</header>
 
 		<article class="prose prose-slate max-w-none">
