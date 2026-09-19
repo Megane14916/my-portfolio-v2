@@ -1,17 +1,63 @@
 ---
+import { getCollection } from "astro:content";
+
+import { links } from "../data/links";
+import { profile } from "../data/profile";
 import Layout from "../layouts/Layout.astro";
+
+const works = await getCollection("works");
+const featuredWorks = works
+	.filter((work) => work.data.featured)
+	.sort((a, b) => b.data.start.getTime() - a.data.start.getTime())
+	.slice(0, 3);
 ---
 
-<Layout title="My Portfolio">
-	<main class="mx-auto flex min-h-screen max-w-4xl flex-col justify-center px-6 py-16">
-		<p class="text-sm font-medium uppercase tracking-widest text-slate-500">
-			Portfolio
-		</p>
-		<h1 class="mt-4 text-4xl font-bold tracking-tight text-slate-900">
-			My Portfolio
-		</h1>
-		<p class="mt-4 max-w-xl text-slate-600">
-			Astro project initialized. コンテンツとページ構成は次のフェーズで追加します。
-		</p>
+<Layout title={profile.name} description={profile.introduction}>
+	<main class="mx-auto max-w-5xl px-6 py-12">
+		<nav class="flex items-center justify-between border-b border-slate-200 pb-6" aria-label="メインナビゲーション">
+			<a class="font-semibold text-slate-900" href="/">{profile.name}</a>
+			<div class="flex gap-4 text-sm text-slate-600">
+				<a class="hover:text-slate-900" href="/about">About</a>
+				<a class="hover:text-slate-900" href="/works">Works</a>
+				{links.map((link) => (
+					<a class="hover:text-slate-900" href={link.href} target="_blank" rel="noreferrer">
+						{link.label}
+					</a>
+				))}
+			</div>
+		</nav>
+
+		<section class="py-24">
+			<p class="text-sm font-medium uppercase tracking-widest text-slate-500">Portfolio</p>
+			<h1 class="mt-4 text-5xl font-bold tracking-tight text-slate-900">{profile.name}</h1>
+			<p class="mt-4 text-xl text-slate-600">{profile.role}</p>
+			<p class="mt-6 max-w-2xl leading-8 text-slate-600">{profile.description}</p>
+			<div class="mt-8 flex gap-4">
+				<a class="rounded bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700" href="/about">
+					Aboutを見る
+				</a>
+				<a class="rounded border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:border-slate-500" href="/works">
+					Worksを見る
+				</a>
+			</div>
+		</section>
+
+		<section aria-labelledby="featured-works-title">
+			<div class="flex items-baseline justify-between gap-4">
+				<h2 id="featured-works-title" class="text-2xl font-semibold text-slate-900">Featured Works</h2>
+				<a class="text-sm text-slate-600 hover:text-slate-900" href="/works">すべて見る</a>
+			</div>
+			<div class="mt-6 grid gap-5 md:grid-cols-2">
+				{featuredWorks.map((work) => (
+					<article class="rounded-lg border border-slate-200 p-6">
+						<h3 class="text-lg font-semibold text-slate-900">{work.data.title}</h3>
+						<p class="mt-2 text-sm leading-6 text-slate-600">{work.data.description}</p>
+						<a class="mt-4 inline-block text-sm font-medium text-slate-900 underline underline-offset-4" href={`/works/${work.data.slug}`}>
+							詳しく見る
+						</a>
+					</article>
+				))}
+			</div>
+		</section>
 	</main>
 </Layout>
