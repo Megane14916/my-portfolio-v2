@@ -1,0 +1,21 @@
+---
+interface Props {
+	eyebrow?: string;
+	title: string;
+	description?: string;
+	id?: string;
+	as?: "h1" | "h2";
+}
+
+const { eyebrow, title, description, id, as = "h2" } = Astro.props;
+---
+
+<header>
+	{eyebrow && <p class="text-sm font-medium uppercase tracking-widest text-slate-500">{eyebrow}</p>}
+	{as === "h1" ? (
+		<h1 id={id} class="mt-4 text-4xl font-bold tracking-tight text-slate-900">{title}</h1>
+	) : (
+		<h2 id={id} class="mt-4 text-2xl font-semibold tracking-tight text-slate-900">{title}</h2>
+	)}
+	{description && <p class="mt-4 text-slate-600">{description}</p>}
+</header>

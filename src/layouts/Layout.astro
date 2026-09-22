@@ -1,5 +1,7 @@
 ---
 import "../styles/global.css";
+import Footer from "../components/common/Footer.astro";
+import Header from "../components/common/Header.astro";
 
 interface Props {
 	title?: string;
@@ -24,6 +26,8 @@ const {
 		<title>{title}</title>
 	</head>
 	<body>
+		<Header />
 		<slot />
+		<Footer />
 	</body>
 </html>

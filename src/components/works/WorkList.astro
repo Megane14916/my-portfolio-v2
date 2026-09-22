@@ -1,0 +1,15 @@
+---
+import type { CollectionEntry } from "astro:content";
+
+import WorkCard from "./WorkCard.astro";
+
+interface Props {
+	works: readonly CollectionEntry<"works">[];
+}
+
+const { works } = Astro.props;
+---
+
+<div class="grid gap-5 md:grid-cols-2" aria-label="制作物一覧">
+	{works.map((work) => <WorkCard work={work} />)}
+</div>

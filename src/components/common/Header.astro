@@ -1,0 +1,19 @@
+---
+import { links } from "../../data/links";
+import { profile } from "../../data/profile";
+---
+
+<header class="border-b border-slate-200">
+	<nav class="mx-auto flex max-w-5xl items-center justify-between px-6 py-6" aria-label="メインナビゲーション">
+		<a class="font-semibold text-slate-900" href="/">{profile.name}</a>
+		<div class="flex gap-4 text-sm text-slate-600">
+			<a class="hover:text-slate-900" href="/about">About</a>
+			<a class="hover:text-slate-900" href="/works">Works</a>
+			{links.map((link) => (
+				<a class="hover:text-slate-900" href={link.href} target={link.external ? "_blank" : undefined} rel={link.external ? "noreferrer" : undefined}>
+					{link.label}
+				</a>
+			))}
+		</div>
+	</nav>
+</header>
