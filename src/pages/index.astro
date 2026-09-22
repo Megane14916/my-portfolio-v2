@@ -1,7 +1,8 @@
 ---
 import { getCollection } from "astro:content";
 
-import { links } from "../data/links";
+import SectionTitle from "../components/common/SectionTitle.astro";
+import WorkList from "../components/works/WorkList.astro";
 import { profile } from "../data/profile";
 import Layout from "../layouts/Layout.astro";
 
@@ -14,19 +15,6 @@ const featuredWorks = works
 
 <Layout title={profile.name} description={profile.introduction}>
 	<main class="mx-auto max-w-5xl px-6 py-12">
-		<nav class="flex items-center justify-between border-b border-slate-200 pb-6" aria-label="メインナビゲーション">
-			<a class="font-semibold text-slate-900" href="/">{profile.name}</a>
-			<div class="flex gap-4 text-sm text-slate-600">
-				<a class="hover:text-slate-900" href="/about">About</a>
-				<a class="hover:text-slate-900" href="/works">Works</a>
-				{links.map((link) => (
-					<a class="hover:text-slate-900" href={link.href} target="_blank" rel="noreferrer">
-						{link.label}
-					</a>
-				))}
-			</div>
-		</nav>
-
 		<section class="py-24">
 			<p class="text-sm font-medium uppercase tracking-widest text-slate-500">Portfolio</p>
 			<h1 class="mt-4 text-5xl font-bold tracking-tight text-slate-900">{profile.name}</h1>
@@ -43,21 +31,11 @@ const featuredWorks = works
 		</section>
 
 		<section aria-labelledby="featured-works-title">
-			<div class="flex items-baseline justify-between gap-4">
-				<h2 id="featured-works-title" class="text-2xl font-semibold text-slate-900">Featured Works</h2>
+			<div class="flex items-end justify-between gap-4">
+				<SectionTitle id="featured-works-title" title="Featured Works" />
 				<a class="text-sm text-slate-600 hover:text-slate-900" href="/works">すべて見る</a>
 			</div>
-			<div class="mt-6 grid gap-5 md:grid-cols-2">
-				{featuredWorks.map((work) => (
-					<article class="rounded-lg border border-slate-200 p-6">
-						<h3 class="text-lg font-semibold text-slate-900">{work.data.title}</h3>
-						<p class="mt-2 text-sm leading-6 text-slate-600">{work.data.description}</p>
-						<a class="mt-4 inline-block text-sm font-medium text-slate-900 underline underline-offset-4" href={`/works/${work.data.slug}`}>
-							詳しく見る
-						</a>
-					</article>
-				))}
-			</div>
+			<div class="mt-6"><WorkList works={featuredWorks} /></div>
 		</section>
 	</main>
 </Layout>

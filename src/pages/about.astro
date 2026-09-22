@@ -1,7 +1,10 @@
 ---
 import { getCollection, render } from "astro:content";
 
-import { formatPeriod, getSkillName } from "../data/content";
+import SectionTitle from "../components/common/SectionTitle.astro";
+import SkillList from "../components/about/SkillList.astro";
+import Timeline from "../components/about/Timeline.astro";
+import { formatPeriod } from "../data/content";
 import { profile } from "../data/profile";
 import { skills } from "../data/skills";
 import Layout from "../layouts/Layout.astro";
@@ -16,55 +19,32 @@ const experienceEntries = await Promise.all(
 		Content: (await render(experience)).Content,
 	})),
 );
+
+const timelineEntries = experienceEntries.map(({ experience, Content }) => ({
+	title: experience.data.title,
+	period: formatPeriod(experience.data.start, experience.data.end),
+	organization: experience.data.organization,
+	skills: experience.data.skills,
+	Content,
+}));
 ---
 
 <Layout title={`About | ${profile.name}`} description={profile.description}>
 	<main class="mx-auto max-w-4xl px-6 py-12">
-		<nav class="border-b border-slate-200 pb-6 text-sm text-slate-600" aria-label="パンくず">
-			<a class="hover:text-slate-900" href="/">Home</a>
-			<span class="mx-2">/</span>
-			<span>About</span>
-		</nav>
-
 		<header class="py-16">
-			<p class="text-sm font-medium uppercase tracking-widest text-slate-500">About</p>
-			<h1 class="mt-4 text-4xl font-bold tracking-tight text-slate-900">{profile.name}</h1>
+			<SectionTitle as="h1" eyebrow="About" title={profile.name} />
 			<p class="mt-4 text-xl text-slate-600">{profile.role}</p>
 			<p class="mt-6 max-w-2xl leading-8 text-slate-600">{profile.description}</p>
 		</header>
 
 		<section aria-labelledby="experience-title">
-			<h2 id="experience-title" class="text-2xl font-semibold text-slate-900">Experience</h2>
-			<div class="mt-6 space-y-6 border-l border-slate-300 pl-6">
-				{experienceEntries.map(({ experience, Content }) => (
-					<article class="relative">
-						<span class="absolute -left-[1.9rem] top-1.5 size-2 rounded-full bg-slate-900" aria-hidden="true"></span>
-						<p class="text-sm text-slate-500">{formatPeriod(experience.data.start, experience.data.end)}</p>
-						<h3 class="mt-1 text-lg font-semibold text-slate-900">{experience.data.title}</h3>
-						{experience.data.organization && <p class="mt-1 text-sm text-slate-600">{experience.data.organization}</p>}
-						<div class="mt-3 leading-7 text-slate-600"><Content /></div>
-						{experience.data.skills.length > 0 && (
-							<ul class="mt-3 flex flex-wrap gap-2" aria-label={`${experience.data.title}の関連スキル`}>
-								{experience.data.skills.map((skill) => (
-									<li class="rounded bg-slate-100 px-2 py-1 text-xs text-slate-700">{getSkillName(skill)}</li>
-								))}
-							</ul>
-						)}
-					</article>
-				))}
-			</div>
+			<SectionTitle id="experience-title" title="Experience" />
+			<Timeline entries={timelineEntries} />
 		</section>
 
 		<section class="mt-16" aria-labelledby="skills-title">
-			<h2 id="skills-title" class="text-2xl font-semibold text-slate-900">Skills</h2>
-			<ul class="mt-6 grid gap-3 sm:grid-cols-2">
-				{skills.map((skill) => (
-					<li class="rounded border border-slate-200 px-4 py-3">
-						<span class="font-medium text-slate-900">{skill.name}</span>
-						<span class="ml-2 text-sm text-slate-500">{skill.category}</span>
-					</li>
-				))}
-			</ul>
+			<SectionTitle id="skills-title" title="Skills" />
+			<SkillList skills={skills} />
 		</section>
 	</main>
 </Layout>
